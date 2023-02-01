@@ -7,7 +7,7 @@ The `pygnme` package is a python interface to the [`libgnme`](https://github.com
 `pygnme` is packaged with a `setup.py`:
 
 ```
-git clone https://github.com/obackhouse/pygnme
+git clone https://github.com/BoothGroup/pygnme
 python -m pip install . -v --user
 ```
 

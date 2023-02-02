@@ -1,0 +1,13 @@
+*.o
+*.so*
+*.bak
+CMakeCache.txt
+cmake_install.cmake
+ArmadilloConfig.cmake
+ArmadilloConfigVersion.cmake
+Makefile
+CMakeFiles/
+InstallFiles/
+tmp/
+tests1/smoke_test
+tests2/main

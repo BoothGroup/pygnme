@@ -1,8 +1,10 @@
 cmake_minimum_required(VERSION 3.16)
 project(pygnme_build)
 
-set(CMAKE_CXX_FLAGS "-Wall ${CMAKE_CXX_FLAGS}")
+# C++ arguments
+set(CMAKE_CXX_FLAGS "-Wall -O3 ${CMAKE_CXX_FLAGS}")
 
+# Include directories
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/carma/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/armadillo/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/libgnme/libgnme)
@@ -13,12 +15,32 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/pygnme/wick)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/pygnme/slater)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/pygnme/utils)
 
+# OpenMP
+find_package(OpenMP)
+if(OPENMP_FOUND)
+    set(WITH_OPENMP 1)
+    set(OPENMP_C_PROPERTIES OpenMP::OpenMP_C)
+else()
+    set(WITH_OPENMP 0)
+endif()
+
+# BLAS
+find_package(BLAS REQUIRED)
+
+# Armadillo
 set(ARMADILLO_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/external/armadillo)
-find_package(pybind11 REQUIRED)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/external/armadillo)
+
+# pybind11
+find_package(pybind11 REQUIRED)
+
+# CARMA
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/external/carma)
+
+# libGNME
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/external/libgnme)
 
+# Compile the library
 pybind11_add_module(libpygnme
     ${CMAKE_CURRENT_SOURCE_DIR}/pygnme/libpygnme.cc
 )

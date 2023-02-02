@@ -18,17 +18,9 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/external/carma/extern/armadillo-cod
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/external/carma)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/external/libgnme)
 
-#pybind11_add_module(wick ${CMAKE_CURRENT_SOURCE_DIR}/pygnme/wick_api.cc)
-#target_link_libraries(wick PUBLIC gnme_wick)
-#target_link_libraries(wick PUBLIC gnme_utils)
-#target_link_libraries(wick PUBLIC carma::carma)
-#
-#pybind11_add_module(utils ${CMAKE_CURRENT_SOURCE_DIR}/pygnme/utils_api.cc)
-#target_link_libraries(utils PUBLIC gnme_utils)
-#target_link_libraries(utils PUBLIC gnme_utils)
-#target_link_libraries(utils PUBLIC carma::carma)
-
-pybind11_add_module(pygnme ${CMAKE_CURRENT_SOURCE_DIR}/pygnme/api.cc)
-target_link_libraries(pygnme PUBLIC gnme_wick)
-target_link_libraries(pygnme PUBLIC gnme_utils)
-target_link_libraries(pygnme PUBLIC carma::carma)
+pybind11_add_module(libpygnme
+    ${CMAKE_CURRENT_SOURCE_DIR}/pygnme/libpygnme.cc
+)
+target_link_libraries(libpygnme PUBLIC gnme_wick)
+target_link_libraries(libpygnme PUBLIC gnme_utils)
+target_link_libraries(libpygnme PUBLIC carma::carma)

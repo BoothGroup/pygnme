@@ -23,8 +23,8 @@ namespace pybind11::literals {
 using Complex = std::complex<double>;
 
 
-PYBIND11_MODULE(pygnme, m) {
-    m.attr("__name__") = "pgnme";
+PYBIND11_MODULE(libpygnme, m) {
+    m.attr("__name__") = "libpygnme";
     m.doc() = "pybind11 interface to libgnme";
 
     // TODO these are experimental

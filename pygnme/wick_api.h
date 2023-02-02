@@ -78,8 +78,8 @@ void export_wick_rscf(py::module &m, const std::string &typestr) {
         )
         .def("evaluate", 
                 [](WickRscf &scf, Bitset &bxa, Bitset &bxb, Bitset &bwa, Bitset &bwb) {
-                    double S = 0.0;
-                    double V = 0.0;
+                    Tc S = 0.0;
+                    Tc V = 0.0;
                     scf.evaluate(bxa, bxb, bwa, bwb, S, V);
                     return std::make_tuple(S, V);
                 }
@@ -92,8 +92,8 @@ void export_wick_rscf(py::module &m, const std::string &typestr) {
         )
         .def("evaluate", 
                 [](WickRscf &scf, arma::umat &xa_hp, arma::umat &xb_hp, arma::umat &wa_hp, arma::umat &wb_hp) {
-                    double S = 0.0;
-                    double V = 0.0;
+                    Tc S = 0.0;
+                    Tc V = 0.0;
                     scf.evaluate(xa_hp, xb_hp, wa_hp, wb_hp, S, V);
                     return std::make_tuple(S, V);
                 }

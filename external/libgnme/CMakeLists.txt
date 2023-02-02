@@ -23,8 +23,8 @@ if(WITH_OPENMP)
 endif(WITH_OPENMP)
 
 # Look for linear algebra libraries
-find_package(BLAS)
-find_package(LAPACK)
+find_package(BLAS REQUIRED)
+find_package(LAPACK REQUIRED)
 
 # Setup Armadillo paths
 #set(ARMADILLO_PATH "${LIBGNME_SOURCE_DIR}/external/armadillo-10.1.2")

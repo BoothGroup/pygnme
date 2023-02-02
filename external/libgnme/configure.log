@@ -1,0 +1,12 @@
+GNME configured by ollie-kcl@ollie-kcl
+Thu  2 Feb 16:47:12 GMT 2023
+
+./configure 
+
+PWD=/home/ollie-kcl/git/pygnme/external/libgnme
+CC=
+CFLAGS=
+CXX=
+CXXFLAGS=
+
+./configure: line 113: cmake3: command not found

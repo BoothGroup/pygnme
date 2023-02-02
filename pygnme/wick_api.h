@@ -7,6 +7,7 @@
 
 #include "wick_orbitals.h"
 #include "wick_rscf.h"
+#include "wick_uscf.h"
 #include "bitset.h"
 
 namespace py = pybind11;
@@ -92,6 +93,62 @@ void export_wick_rscf(py::module &m, const std::string &typestr) {
         )
         .def("evaluate", 
                 [](WickRscf &scf, arma::umat &xa_hp, arma::umat &xb_hp, arma::umat &wa_hp, arma::umat &wb_hp) {
+                    Tc S = 0.0;
+                    Tc V = 0.0;
+                    scf.evaluate(xa_hp, xb_hp, wa_hp, wb_hp, S, V);
+                    return std::make_tuple(S, V);
+                }
+        );
+}
+
+/*
+ * Export the wick_uscf class
+ */
+template<typename Tc, typename Tf, typename Tb>
+void export_wick_uscf(py::module &m, const std::string &typestr) {
+    std::string pyclass_name = std::string("wick_uscf_") + typestr;
+    using WickUscf = libgnme::wick_uscf<Tc, Tf, Tb>;
+    using Bitset = libgnme::bitset;
+    py::class_<WickUscf>(m, pyclass_name.c_str())
+        // Constructors:
+        .def(py::init<libgnme::wick_orbitals<Tc, Tb> &, libgnme::wick_orbitals<Tc, Tb> &,
+                      const arma::Mat<Tb> &>())
+        .def(py::init<libgnme::wick_orbitals<Tc, Tb> &, libgnme::wick_orbitals<Tc, Tb> &,
+                      const arma::Mat<Tb> &, double>())
+        // Variables:
+        .def_readwrite("m_nza", &WickUscf::m_nza)
+        .def_readwrite("m_nzb", &WickUscf::m_nzb)
+        // Functions:
+        .def("add_one_body", py::overload_cast<arma::Mat<Tf> &>(&WickUscf::add_one_body))
+        .def("add_one_body", py::overload_cast<arma::Mat<Tf> &, arma::Mat<Tf> &>(&WickUscf::add_one_body))
+        .def("add_two_body", &WickUscf::add_two_body)
+        .def("evaluate_overlap", &WickUscf::evaluate_overlap)
+        .def("evaluate_one_body_spin", &WickUscf::evaluate_one_body_spin)
+        .def("evaluate_rdm1", &WickUscf::evaluate_rdm1)
+        // evaluate requires overloading and return values since Tc will be
+        // immutable on the python side
+        .def("evaluate", 
+                [](WickUscf &scf, Bitset &bxa, Bitset &bxb, Bitset &bwa, Bitset &bwb, Tc &S, Tc &V) {
+                    scf.evaluate(bxa, bxb, bwa, bwb, S, V);
+                    return std::make_tuple(S, V);
+                }
+        )
+        .def("evaluate", 
+                [](WickUscf &scf, Bitset &bxa, Bitset &bxb, Bitset &bwa, Bitset &bwb) {
+                    Tc S = 0.0;
+                    Tc V = 0.0;
+                    scf.evaluate(bxa, bxb, bwa, bwb, S, V);
+                    return std::make_tuple(S, V);
+                }
+        )
+        .def("evaluate", 
+                [](WickUscf &scf, arma::umat &xa_hp, arma::umat &xb_hp, arma::umat &wa_hp, arma::umat &wb_hp, Tc &S, Tc &V) {
+                    scf.evaluate(xa_hp, xb_hp, wa_hp, wb_hp, S, V);
+                    return std::make_tuple(S, V);
+                }
+        )
+        .def("evaluate", 
+                [](WickUscf &scf, arma::umat &xa_hp, arma::umat &xb_hp, arma::umat &wa_hp, arma::umat &wb_hp) {
                     Tc S = 0.0;
                     Tc V = 0.0;
                     scf.evaluate(xa_hp, xb_hp, wa_hp, wb_hp, S, V);

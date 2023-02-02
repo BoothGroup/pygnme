@@ -10,6 +10,7 @@
 
 #include "wick_orbitals.h"
 #include "wick_rscf.h"
+#include "wick_uscf.h"
 #include "bitset.h"
 #include "bitset_tools.h"
 
@@ -44,6 +45,11 @@ PYBIND11_MODULE(libpygnme, m) {
     export_wick_rscf<Complex, double, double>(wick, "complex_double_double");
     export_wick_rscf<Complex, Complex, double>(wick, "complex_complex_double");
     export_wick_rscf<Complex, Complex, Complex>(wick, "complex_complex_complex");
+
+    export_wick_uscf<double, double, double>(wick, "double_double_double");
+    export_wick_uscf<Complex, double, double>(wick, "complex_double_double");
+    export_wick_uscf<Complex, Complex, double>(wick, "complex_complex_double");
+    export_wick_uscf<Complex, Complex, Complex>(wick, "complex_complex_complex");
 
 
     // pygnme.utils

@@ -46,4 +46,6 @@ pybind11_add_module(libpygnme
 )
 target_link_libraries(libpygnme PUBLIC gnme_wick)
 target_link_libraries(libpygnme PUBLIC gnme_utils)
+target_link_libraries(libpygnme PUBLIC blas)
+target_link_libraries(libpygnme PUBLIC lapack)
 target_link_libraries(libpygnme PUBLIC carma::carma)

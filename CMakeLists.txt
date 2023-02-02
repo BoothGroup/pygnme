@@ -26,6 +26,7 @@ endif()
 
 # BLAS
 find_package(BLAS REQUIRED)
+find_package(LAPACK REQUIRED)
 
 # Armadillo
 set(ARMADILLO_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/external/armadillo)

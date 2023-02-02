@@ -27,7 +27,8 @@ find_package(BLAS)
 find_package(LAPACK)
 
 # Setup Armadillo paths
-set(ARMADILLO_PATH "${LIBGNME_SOURCE_DIR}/external/armadillo-10.1.2")
+#set(ARMADILLO_PATH "${LIBGNME_SOURCE_DIR}/external/armadillo-10.1.2")
+set(ARMADILLO_PATH "${LIBGNME_SOURCE_DIR}/../armadillo")
 include(cmake/SetupArmadillo.cmake)
 include_directories($<TARGET_PROPERTY:armadillo,INTERFACE_INCLUDE_DIRECTORIES>)
 set_property(DIRECTORY . APPEND PROPERTY COMPILE_DEFINITIONS

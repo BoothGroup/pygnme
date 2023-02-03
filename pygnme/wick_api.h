@@ -31,8 +31,8 @@ void export_wick_orbitals(py::module &m, const std::string &typestr) {
                       const size_t, const size_t>())
         // Variables:
         .def_readonly("m_nbsf", &WickOrbitals::m_nbsf)
-        .def_readonly("m_nmo", &WickOrbitals::m_nbsf)
-        .def_readonly("m_nelec", &WickOrbitals::m_nbsf)
+        .def_readonly("m_nmo", &WickOrbitals::m_nmo)
+        .def_readonly("m_nelec", &WickOrbitals::m_nelec)
         .def_readwrite("m_nact", &WickOrbitals::m_nact)
         .def_readwrite("m_ncore", &WickOrbitals::m_ncore)
         .def_readwrite("m_nz", &WickOrbitals::m_nz)
@@ -66,38 +66,68 @@ void export_wick_rscf(py::module &m, const std::string &typestr) {
         // Functions:
         .def("add_one_body", &WickRscf::add_one_body)
         .def("add_two_body", &WickRscf::add_two_body)
-        .def("evaluate_overlap", &WickRscf::evaluate_overlap)
-        .def("evaluate_one_body_spin", &WickRscf::evaluate_one_body_spin)
-        .def("evaluate_rdm1", &WickRscf::evaluate_rdm1)
-        // evaluate requires overloading and return values since Tc will be
-        // immutable on the python side
-        .def("evaluate", 
-                [](WickRscf &scf, Bitset &bxa, Bitset &bxb, Bitset &bwa, Bitset &bwb, Tc &S, Tc &V) {
-                    scf.evaluate(bxa, bxb, bwa, bwb, S, V);
-                    return std::make_tuple(S, V);
-                }
+        // Evaluation functions need return values, since Tc will always be
+        // immutable on the python side.
+        .def("evaluate", [](WickRscf &scf,
+                            Bitset &bxa, Bitset &bxb,
+                            Bitset &bwa, Bitset &bwb,
+                            Tc &S, Tc &V) {
+                scf.evaluate(bxa, bxb, bwa, bwb, S, V);
+                return std::make_tuple(S, V);
+            },
+            py::arg("bxa"),
+            py::arg("bxb"),
+            py::arg("bwa"),
+            py::arg("bwb"),
+            py::arg("S") = 0.0,
+            py::arg("V") = 0.0
         )
-        .def("evaluate", 
-                [](WickRscf &scf, Bitset &bxa, Bitset &bxb, Bitset &bwa, Bitset &bwb) {
-                    Tc S = 0.0;
-                    Tc V = 0.0;
-                    scf.evaluate(bxa, bxb, bwa, bwb, S, V);
-                    return std::make_tuple(S, V);
-                }
+        .def("evaluate", [](WickRscf &scf,
+                            arma::umat &xa_hp, arma::umat &xb_hp,
+                            arma::umat &wa_hp, arma::umat &wb_hp,
+                            Tc &S, Tc &M) {
+                scf.evaluate(xa_hp, xb_hp, wa_hp, wb_hp, S, M);
+                return std::make_tuple(S, M);
+            },
+            py::arg("xa_hp"),
+            py::arg("xb_hp"),
+            py::arg("wa_hp"),
+            py::arg("wb_hp"),
+            py::arg("S") = 0.0,
+            py::arg("M") = 0.0
         )
-        .def("evaluate", 
-                [](WickRscf &scf, arma::umat &xa_hp, arma::umat &xb_hp, arma::umat &wa_hp, arma::umat &wb_hp, Tc &S, Tc &V) {
-                    scf.evaluate(xa_hp, xb_hp, wa_hp, wb_hp, S, V);
-                    return std::make_tuple(S, V);
-                }
+        .def("evaluate_overlap", [](WickRscf &scf,
+                                    arma::umat &xa_hp, arma::umat &xb_hp,
+                                    arma::umat &wa_hp, arma::umat &wb_hp,
+                                    Tc &S) {
+                scf.evaluate_overlap(xa_hp, xb_hp, wa_hp, wb_hp, S);
+                return S;
+            },
+            py::arg("xa_hp"),
+            py::arg("xb_hp"),
+            py::arg("wa_hp"),
+            py::arg("wb_hp"),
+            py::arg("S") = 0.0
         )
-        .def("evaluate", 
-                [](WickRscf &scf, arma::umat &xa_hp, arma::umat &xb_hp, arma::umat &wa_hp, arma::umat &wb_hp) {
-                    Tc S = 0.0;
-                    Tc V = 0.0;
-                    scf.evaluate(xa_hp, xb_hp, wa_hp, wb_hp, S, V);
-                    return std::make_tuple(S, V);
-                }
+        .def("evaluate_one_body_spin", [](WickRscf &scf,
+                                          arma::umat &xhp, arma::umat &whp,
+                                          Tc &S, Tc &V) {
+                scf.evaluate_one_body_spin(xhp, whp, S, V);
+                return std::make_tuple(S, V);
+            },
+            py::arg("xhp"),
+            py::arg("whp"),
+            py::arg("S") = 0.0,
+            py::arg("V") = 0.0
+        )
+        .def("evaluate_rdm1", [](WickRscf &scf,
+                                 Bitset &bxa, Bitset &bxb,
+                                 Bitset &bwa, Bitset &bwb,
+                                 Tc &S,
+                                 arma::Mat<Tc> &Pa, arma::Mat<Tc> &Pb) {
+                scf.evaluate_rdm1(bxa, bxb, bwa, bwb, S, Pa, Pb);
+                return S;
+            }
         );
 }
 
@@ -122,38 +152,70 @@ void export_wick_uscf(py::module &m, const std::string &typestr) {
         .def("add_one_body", py::overload_cast<arma::Mat<Tf> &>(&WickUscf::add_one_body))
         .def("add_one_body", py::overload_cast<arma::Mat<Tf> &, arma::Mat<Tf> &>(&WickUscf::add_one_body))
         .def("add_two_body", &WickUscf::add_two_body)
-        .def("evaluate_overlap", &WickUscf::evaluate_overlap)
-        .def("evaluate_one_body_spin", &WickUscf::evaluate_one_body_spin)
-        .def("evaluate_rdm1", &WickUscf::evaluate_rdm1)
-        // evaluate requires overloading and return values since Tc will be
-        // immutable on the python side
-        .def("evaluate", 
-                [](WickUscf &scf, Bitset &bxa, Bitset &bxb, Bitset &bwa, Bitset &bwb, Tc &S, Tc &V) {
-                    scf.evaluate(bxa, bxb, bwa, bwb, S, V);
-                    return std::make_tuple(S, V);
-                }
+        // Evaluation functions need return values, since Tc will always be
+        // immutable on the python side.
+        .def("evaluate", [](WickUscf &scf,
+                            Bitset &bxa, Bitset &bxb,
+                            Bitset &bwa, Bitset &bwb,
+                            Tc &S, Tc &V) {
+                scf.evaluate(bxa, bxb, bwa, bwb, S, V);
+                return std::make_tuple(S, V);
+            },
+            py::arg("bxa"),
+            py::arg("bxb"),
+            py::arg("bwa"),
+            py::arg("bwb"),
+            py::arg("S") = 0.0,
+            py::arg("V") = 0.0
         )
-        .def("evaluate", 
-                [](WickUscf &scf, Bitset &bxa, Bitset &bxb, Bitset &bwa, Bitset &bwb) {
-                    Tc S = 0.0;
-                    Tc V = 0.0;
-                    scf.evaluate(bxa, bxb, bwa, bwb, S, V);
-                    return std::make_tuple(S, V);
-                }
+        .def("evaluate", [](WickUscf &scf,
+                            arma::umat &xa_hp, arma::umat &xb_hp,
+                            arma::umat &wa_hp, arma::umat &wb_hp,
+                            Tc &S, Tc &V) {
+                scf.evaluate(xa_hp, xb_hp, wa_hp, wb_hp, S, V);
+                return std::make_tuple(S, V);
+            },
+            py::arg("xa_hp"),
+            py::arg("xb_hp"),
+            py::arg("wa_hp"),
+            py::arg("wb_hp"),
+            py::arg("S") = 0.0,
+            py::arg("V") = 0.0
         )
-        .def("evaluate", 
-                [](WickUscf &scf, arma::umat &xa_hp, arma::umat &xb_hp, arma::umat &wa_hp, arma::umat &wb_hp, Tc &S, Tc &V) {
-                    scf.evaluate(xa_hp, xb_hp, wa_hp, wb_hp, S, V);
-                    return std::make_tuple(S, V);
-                }
+        .def("evaluate_overlap", [](WickUscf &scf,
+                                    arma::umat &xa_hp, arma::umat &xb_hp,
+                                    arma::umat &wa_hp, arma::umat &wb_hp,
+                                    Tc &S) {
+                scf.evaluate_overlap(xa_hp, xb_hp, wa_hp, wb_hp, S);
+                return S;
+            },
+            py::arg("xa_hp"),
+            py::arg("xb_hp"),
+            py::arg("wa_hp"),
+            py::arg("wb_hp"),
+            py::arg("S") = 0.0
         )
-        .def("evaluate", 
-                [](WickUscf &scf, arma::umat &xa_hp, arma::umat &xb_hp, arma::umat &wa_hp, arma::umat &wb_hp) {
-                    Tc S = 0.0;
-                    Tc V = 0.0;
-                    scf.evaluate(xa_hp, xb_hp, wa_hp, wb_hp, S, V);
-                    return std::make_tuple(S, V);
-                }
+        .def("evaluate_one_body_spin", [](WickUscf &scf,
+                                          arma::umat &xhp, arma::umat &whp,
+                                          Tc &S, Tc &V,
+                                          bool alpha) {
+                scf.evaluate_one_body_spin(xhp, whp, S, V, alpha);
+                return std::make_tuple(S, V);
+            },
+            py::arg("xhp"),
+            py::arg("whp"),
+            py::arg("S") = 0.0,
+            py::arg("V") = 0.0,
+            py::arg("alpha") = true
+        )
+        .def("evaluate_rdm1", [](WickUscf &scf,
+                                 Bitset &bxa, Bitset &bxb,
+                                 Bitset &bwa, Bitset &bwb,
+                                 Tc &S,
+                                 arma::Mat<Tc> &Pa, arma::Mat<Tc> &Pb) {
+                scf.evaluate_rdm1(bxa, bxb, bwa, bwb, S, Pa, Pb);
+                return S;
+            }
         );
 }
 

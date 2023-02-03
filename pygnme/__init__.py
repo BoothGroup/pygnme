@@ -4,7 +4,7 @@ pygnme
 """
 
 import libpygnme
-from libpygnme import wick, utils
+from libpygnme import wick, slater, utils
 
 
 wick.wick_orbitals = {
@@ -27,4 +27,20 @@ wick.wick_uscf = {
     (complex, float, float): wick.wick_uscf_complex_double_double,
     (complex, complex, float): wick.wick_uscf_complex_complex_double,
     (complex, complex, complex): wick.wick_uscf_complex_complex_complex,
+}
+
+
+slater.slater_rscf = {
+    (float, float, float): slater.slater_rscf_double_double_double,
+    (complex, float, float): slater.slater_rscf_complex_double_double,
+    (complex, complex, float): slater.slater_rscf_complex_complex_double,
+    (complex, complex, complex): slater.slater_rscf_complex_complex_complex,
+}
+
+
+slater.slater_uscf = {
+    (float, float, float): slater.slater_uscf_double_double_double,
+    (complex, float, float): slater.slater_uscf_complex_double_double,
+    (complex, complex, float): slater.slater_uscf_complex_complex_double,
+    (complex, complex, complex): slater.slater_uscf_complex_complex_complex,
 }

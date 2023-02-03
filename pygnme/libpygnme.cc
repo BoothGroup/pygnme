@@ -9,6 +9,7 @@
 #include <armadillo>
 
 #include "wick_api.h"
+#include "slater_api.h"
 #include "utils_api.h"
 
 namespace py = pybind11;
@@ -44,6 +45,21 @@ PYBIND11_MODULE(libpygnme, m) {
     export_wick_uscf<Complex, double, double>(wick, "complex_double_double");
     export_wick_uscf<Complex, Complex, double>(wick, "complex_complex_double");
     export_wick_uscf<Complex, Complex, Complex>(wick, "complex_complex_complex");
+
+
+    // pygnme.slater
+
+    py::module slater = m.def_submodule("slater");
+
+    export_slater_rscf<double, double, double>(slater, "double_double_double");
+    export_slater_rscf<Complex, double, double>(slater, "complex_double_double");
+    export_slater_rscf<Complex, Complex, double>(slater, "complex_complex_double");
+    export_slater_rscf<Complex, Complex, Complex>(slater, "complex_complex_complex");
+
+    export_slater_uscf<double, double, double>(slater, "double_double_double");
+    export_slater_uscf<Complex, double, double>(slater, "complex_double_double");
+    export_slater_uscf<Complex, Complex, double>(slater, "complex_complex_double");
+    export_slater_uscf<Complex, Complex, Complex>(slater, "complex_complex_complex");
 
 
     // pygnme.utils

@@ -1,7 +1,11 @@
 """
 pygnme
 ======
+
+The `pygnme` package is a python interface to the `libgnme` package.
 """
+
+__version__ = "1.0.0"
 
 import libpygnme
 from libpygnme import wick, slater, utils

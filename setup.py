@@ -44,7 +44,7 @@ class build_ext(build_ext_orig):
 
 setup(
         name="pygnme",
-        version="0.0.0",
+        version="1.0.0",
         packages=["pygnme"],
         ext_modules=[CMakeExtension(".")],
         cmdclass={

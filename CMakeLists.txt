@@ -7,6 +7,7 @@ set(CMAKE_CXX_FLAGS "-Wall -O3 ${CMAKE_CXX_FLAGS}")
 # Include directories
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/carma/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/armadillo/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/libgnme)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/libgnme/libgnme)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/libgnme/libgnme/wick)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/libgnme/libgnme/slater)

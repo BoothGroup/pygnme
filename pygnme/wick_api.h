@@ -5,10 +5,10 @@
 #include <pybind11/numpy.h>
 #include <pybind11/stl.h>
 
-#include "wick_orbitals.h"
-#include "wick_rscf.h"
-#include "wick_uscf.h"
-#include "bitset.h"
+#include "libgnme/wick/wick_orbitals.h"
+#include "libgnme/wick/wick_rscf.h"
+#include "libgnme/wick/wick_uscf.h"
+#include "libgnme/utils/bitset.h"
 
 namespace py = pybind11;
 

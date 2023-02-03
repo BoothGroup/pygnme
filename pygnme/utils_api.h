@@ -11,10 +11,14 @@
 #include <carma>
 #include <armadillo>
 
-#include "wick_orbitals.h"
-#include "wick_rscf.h"
-#include "bitset.h"
-#include "bitset_tools.h"
+#include "libgnme/wick/wick_orbitals.h"
+#include "libgnme/wick/wick_rscf.h"
+#include "libgnme/utils/utils.h"
+#include "libgnme/utils/bitset.h"
+#include "libgnme/utils/bitset_tools.h"
+#include "libgnme/utils/lowdin_pair.h"
+#include "libgnme/utils/linalg.h"
+#include "libgnme/utils/eri_ao2mo.h"
 
 namespace py = pybind11;
 
@@ -47,6 +51,75 @@ void export_bitset(py::module &m) {
  */
 void export_bitset_tools(py::module &m) {
     m.def("fci_bitset_list", libgnme::fci_bitset_list);
+}
+
+/*
+ * Export noci_density
+ */
+void export_noci_density(py::module &m) {
+    using Complex = std::complex<double>;
+    m.def("rscf_noci_density", libgnme::rscf_noci_density<double, double>);
+    m.def("rscf_noci_density", libgnme::rscf_noci_density<Complex, double>);
+    m.def("uscf_noci_density",
+            py::overload_cast<arma::Cube<double>, const arma::Col<double>, const arma::Mat<double>,
+                              const size_t, const size_t, const size_t, const size_t, const size_t,
+                              arma::Mat<double> &>(
+                                  libgnme::uscf_noci_density<double, double>));
+    m.def("uscf_noci_density",
+            py::overload_cast<arma::Cube<double>, const arma::Col<double>, const arma::Mat<double>,
+                              const size_t, const size_t, const size_t, const size_t, const size_t,
+                              arma::Mat<double> &, arma::Mat<double> &>(
+                                  libgnme::uscf_noci_density<double, double>));
+    m.def("uscf_noci_density",
+            py::overload_cast<arma::Cube<Complex>, const arma::Col<Complex>, const arma::Mat<double>,
+                              const size_t, const size_t, const size_t, const size_t, const size_t,
+                              arma::Mat<Complex> &>(
+                                  libgnme::uscf_noci_density<Complex, double>));
+    m.def("uscf_noci_density",
+            py::overload_cast<arma::Cube<Complex>, const arma::Col<Complex>, const arma::Mat<double>,
+                              const size_t, const size_t, const size_t, const size_t, const size_t,
+                              arma::Mat<Complex> &, arma::Mat<Complex> &>(
+                                  libgnme::uscf_noci_density<Complex, double>));
+    m.def("gscf_noci_density", libgnme::gscf_noci_density<double, double>);
+    m.def("gscf_noci_density", libgnme::gscf_noci_density<Complex, double>);
+}
+
+/*
+ * Export lowdin_pair
+ */
+void export_lowdin_pair(py::module &m) {
+    using Complex = std::complex<double>;
+    m.def("lowdin_pair", libgnme::lowdin_pair<double, double>);
+    m.def("lowdin_pair", libgnme::lowdin_pair<Complex, double>);
+    m.def("lowdin_pair", libgnme::lowdin_pair<Complex, Complex>);
+    m.def("reduced_overlap", libgnme::reduced_overlap<double>);
+    m.def("reduced_overlap", libgnme::reduced_overlap<Complex>);
+}
+
+/*
+ * Export linalg
+ */
+void export_linalg(py::module &m) {
+    using Complex = std::complex<double>;
+    m.def("orthogonalisation_matrix", libgnme::orthogonalisation_matrix<double>);
+    m.def("orthogonalisation_matrix", libgnme::orthogonalisation_matrix<Complex>);
+    m.def("gen_eig_sym", libgnme::gen_eig_sym<double>);
+    m.def("gen_eig_sym", libgnme::gen_eig_sym<Complex>);
+    m.def("adjoint_matrix", libgnme::adjoint_matrix<double>);
+    m.def("adjoint_matrix", libgnme::adjoint_matrix<Complex>);
+}
+
+/*
+ * Export eri_ao2mo
+ */
+void export_eri_ao2mo(py::module &m) {
+    using complex = std::complex<double>;
+    m.def("eri_ao2mo", libgnme::eri_ao2mo<double, double>);
+    m.def("eri_ao2mo", libgnme::eri_ao2mo<Complex, double>);
+    m.def("eri_ao2mo", libgnme::eri_ao2mo<Complex, Complex>);
+    m.def("eri_ao2mo_split", libgnme::eri_ao2mo<double, double>);
+    m.def("eri_ao2mo_split", libgnme::eri_ao2mo<Complex, double>);
+    m.def("eri_ao2mo_split", libgnme::eri_ao2mo<Complex, Complex>);
 }
 
 }  // namespace pybind11:literals

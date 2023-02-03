@@ -8,12 +8,6 @@
 #include <carma>
 #include <armadillo>
 
-#include "wick_orbitals.h"
-#include "wick_rscf.h"
-#include "wick_uscf.h"
-#include "bitset.h"
-#include "bitset_tools.h"
-
 #include "wick_api.h"
 #include "utils_api.h"
 
@@ -58,6 +52,10 @@ PYBIND11_MODULE(libpygnme, m) {
 
     export_bitset(utils);
     export_bitset_tools(utils);
+    export_noci_density(utils);
+    export_lowdin_pair(utils);
+    export_linalg(utils);
+    export_eri_ao2mo(utils);
 }
 
 }  // namespace pybind11:literals

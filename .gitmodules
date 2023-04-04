@@ -1,0 +1,3 @@
+[submodule "external/libgnme"]
+	path = external/libgnme
+	url = git@github.com:hgaburton/libgnme.git

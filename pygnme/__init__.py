@@ -8,8 +8,22 @@ The `pygnme` package is a python interface to the `libgnme` package.
 __version__ = "1.0.0"
 
 import libpygnme
+from numpy import zeros
 from libpygnme import wick, slater, utils
 
+def owndata(x):
+    # CARMA requires numpy arrays to have data ownership
+    if not x.flags["OWNDATA"]:
+        y = zeros(x.shape, order="C")
+        y[:] = x
+        x = y
+    assert x.flags["OWNDATA"]
+    return x
+
+wick.reference_state = {
+    (float): wick.reference_state_double,
+    (complex): wick.reference_state_complex,
+}
 
 wick.wick_orbitals = {
     (float, float): wick.wick_orbitals_double_double,

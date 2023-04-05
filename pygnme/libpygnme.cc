@@ -32,6 +32,9 @@ PYBIND11_MODULE(libpygnme, m) {
 
     py::module wick = m.def_submodule("wick");
 
+    export_reference_state<double>(wick, "double");
+    export_reference_state<Complex>(wick, "complex");
+
     export_wick_orbitals<double, double>(wick, "double_double");
     export_wick_orbitals<Complex, double>(wick, "complex_double");
     export_wick_orbitals<Complex, Complex>(wick, "complex_complex");

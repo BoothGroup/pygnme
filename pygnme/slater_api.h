@@ -46,8 +46,33 @@ void export_slater_uscf(py::module &m, const std::string &typestr) {
         .def("add_one_body", py::overload_cast<arma::Mat<Tf> &>(&SlaterUscf::add_one_body))
         .def("add_one_body", py::overload_cast<arma::Mat<Tf> &, arma::Mat<Tf> &>(&SlaterUscf::add_one_body))
         .def("add_two_body", &SlaterUscf::add_two_body)
-        .def("evaluate", &SlaterUscf::evaluate)
-        .def("evaluate_overlap", &SlaterUscf::evaluate_overlap);
+        .def("evaluate", [](SlaterUscf &scf, 
+                            arma::Mat<Tc> &Cxa, arma::Mat<Tc> &Cxb,
+                            arma::Mat<Tc> &Cwa, arma::Mat<Tc> &Cwb,
+                            Tc &S, Tc &V) {
+                scf.evaluate(Cxa, Cxb, Cwa, Cwb, S, V);
+                return std::make_tuple(S,V);
+             },
+             py::arg("Cxa"),
+             py::arg("Cxb"),
+             py::arg("Cwa"),
+             py::arg("Cwb"),
+             py::arg("S") = 0.0,
+             py::arg("V") = 0.0
+        )
+        .def("evaluate_overlap", [](SlaterUscf &scf, 
+                            arma::Mat<Tc> &Cxa, arma::Mat<Tc> &Cxb,
+                            arma::Mat<Tc> &Cwa, arma::Mat<Tc> &Cwb,
+                            Tc &S) {
+                scf.evaluate(Cxa, Cxb, Cwa, Cwb, S);
+                return V;
+             },
+             py::arg("Cxa"),
+             py::arg("Cxb"),
+             py::arg("Cwa"),
+             py::arg("Cwb"),
+             py::arg("S") = 0.0
+        );
 }
 
 } // namespace:pybind11

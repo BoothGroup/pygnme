@@ -14,7 +14,7 @@
 
 namespace py = pybind11;
 
-namespace pybind11::literals {
+//namespace pybind11::literals {
 
 using Complex = std::complex<double>;
 
@@ -77,4 +77,4 @@ PYBIND11_MODULE(libpygnme, m) {
     export_eri_ao2mo(utils);
 }
 
-}  // namespace pybind11:literals
+//}  // namespace pybind11:literals

@@ -22,13 +22,32 @@ void export_slater_rscf(py::module &m, const std::string &typestr) {
     using SlaterRscf = libgnme::slater_rscf<Tc, Tf, Tb>;
     py::class_<SlaterRscf>(m, pyclass_name.c_str())
         // Constructors:
-        .def(py::init<const size_t, const size_t, const size_t, const arma::Mat<Tb> &>())
-        .def(py::init<const size_t, const size_t, const size_t, const arma::Mat<Tb> &, double>())
+        .def(py::init<const size_t, const size_t, const size_t, const arma::Mat<Tb>>())
+        .def(py::init<const size_t, const size_t, const size_t, const arma::Mat<Tb>, double>())
         // Functions:
         .def("add_one_body", &SlaterRscf::add_one_body)
         .def("add_two_body", &SlaterRscf::add_two_body)
-        .def("evaluate", &SlaterRscf::evaluate)
-        .def("evaluate_overlap", &SlaterRscf::evaluate_overlap);
+        .def("evaluate", [](SlaterRscf &scf, 
+                            arma::Mat<Tc> &Cx, arma::Mat<Tc> &Cw,
+                            Tc &S, Tc &V) {
+                scf.evaluate(Cx, Cw, S, V);
+                return std::make_tuple(S,V);
+             },
+             py::arg("Cx"),
+             py::arg("Cw"),
+             py::arg("S") = 0.0,
+             py::arg("V") = 0.0
+        )
+        .def("evaluate_overlap", [](SlaterRscf &scf,
+                                    arma::Mat<Tc> &Cx, arma::Mat<Tc> &Cw,
+                                    Tc &S) {
+                scf.evaluate_overlap(Cx, Cw, S);
+                return std::make_tuple(S);
+            },
+            py::arg("Cx"),
+            py::arg("Cw"),
+            py::arg("S") = 0.0
+        );
 }
 
 /*
@@ -40,8 +59,8 @@ void export_slater_uscf(py::module &m, const std::string &typestr) {
     using SlaterUscf = libgnme::slater_uscf<Tc, Tf, Tb>;
     py::class_<SlaterUscf>(m, pyclass_name.c_str())
         // Constructors:
-        .def(py::init<const size_t, const size_t, const size_t, const size_t, const arma::Mat<Tb> &>())
-        .def(py::init<const size_t, const size_t, const size_t, const size_t, const arma::Mat<Tb> &, double>())
+        .def(py::init<const size_t, const size_t, const size_t, const size_t, const arma::Mat<Tb>>())
+        .def(py::init<const size_t, const size_t, const size_t, const size_t, const arma::Mat<Tb> , double>())
         // Functions:
         .def("add_one_body", py::overload_cast<arma::Mat<Tf> &>(&SlaterUscf::add_one_body))
         .def("add_one_body", py::overload_cast<arma::Mat<Tf> &, arma::Mat<Tf> &>(&SlaterUscf::add_one_body))
@@ -64,8 +83,8 @@ void export_slater_uscf(py::module &m, const std::string &typestr) {
                             arma::Mat<Tc> &Cxa, arma::Mat<Tc> &Cxb,
                             arma::Mat<Tc> &Cwa, arma::Mat<Tc> &Cwb,
                             Tc &S) {
-                scf.evaluate(Cxa, Cxb, Cwa, Cwb, S);
-                return V;
+                scf.evaluate_overlap(Cxa, Cxb, Cwa, Cwb, S);
+                return S;
              },
              py::arg("Cxa"),
              py::arg("Cxb"),

@@ -12,7 +12,7 @@
 
 namespace py = pybind11;
 
-namespace pybind11::literals {
+//namespace pybind11::literals {
 
 /* 
  * Export the reference_state class
@@ -292,6 +292,6 @@ void export_wick_uscf(py::module &m, const std::string &typestr) {
         );
 }
 
-}  // namespace pybind11:literals
+//}  // namespace pybind11:literals
 
 #endif

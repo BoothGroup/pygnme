@@ -22,7 +22,7 @@
 
 namespace py = pybind11;
 
-namespace pybind11::literals {
+//namespace pybind11::literals {
 
 using Complex = std::complex<double>;
 
@@ -156,6 +156,6 @@ void export_eri_ao2mo(py::module &m) {
     m.def("eri_ao2mo_split", libgnme::eri_ao2mo<Complex, Complex>);
 }
 
-}  // namespace pybind11:literals
+//}  // namespace pybind11:literals
 
 #endif

@@ -11,7 +11,7 @@
 
 namespace py = pybind11;
 
-namespace pybind11::literals {
+//namespace pybind11::literals {
 
 /*
  * Export slater_rscf
@@ -75,6 +75,6 @@ void export_slater_uscf(py::module &m, const std::string &typestr) {
         );
 }
 
-} // namespace:pybind11
+//} // namespace:pybind11
 
 #endif

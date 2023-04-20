@@ -52,9 +52,9 @@ void export_wick_orbitals(py::module &m, const std::string &typestr) {
         // Constructors:
         .def(py::init<libgnme::reference_state<Tc> &, 
                       libgnme::reference_state<Tc> &,
-                      arma::Mat<Tb>>())
+                      arma::Mat<Tb> >())
         .def(py::init<const size_t, const size_t, const size_t,
-                      arma::Mat<Tc>, arma::Mat<Tc>, arma::Mat<Tb>>())
+                      arma::Mat<Tc>, arma::Mat<Tc>, arma::Mat<Tb> >())
         // Variables:
         .def_readonly("m_nbsf", &WickOrbitals::m_nbsf)
         .def_readonly("m_nmo", &WickOrbitals::m_nmo)

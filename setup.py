@@ -33,12 +33,12 @@ class build_ext(build_ext_orig):
                 "-DCMAKE_INSTALL_RPATH=@ORIGIN",
                 "-DPYTHON_EXECUTABLE=" + sys.executable,
         ]
-        build_args = ["-j12"]
+        build_args = ["-j4"]
 
         os.chdir(str(tmp))
-        self.spawn(["cmake3", str(cwd)] + cmake_args)
+        self.spawn(["cmake", str(cwd)] + cmake_args)
         if not self.dry_run:
-            self.spawn(["cmake3", "--build", "."] + build_args)
+            self.spawn(["cmake", "--build", "."] + build_args)
         os.chdir(str(cwd))
 
 

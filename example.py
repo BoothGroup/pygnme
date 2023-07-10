@@ -29,7 +29,7 @@ nmo, nocc = mf.mo_occ.size, np.sum(mf.mo_occ > 0)
 mc1 = mcscf.CASSCF(mf, 4, 4)
 e1, _, ci1, mo1, _ = mc1.kernel()
 
-mc2 = mcscf.CASCI(mf, 6, 6)
+mc2 = mcscf.CASCI(mf, 2, 2)
 e2, _, ci2, mo2, _ = mc2.kernel()
 
 ci = (owndata(ci1), owndata(ci2))

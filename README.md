@@ -2,12 +2,20 @@
 
 The `pygnme` package is a python interface to the [`libgnme`](https://github.com/hgaburton/libgnme) package.
 
+### Prequisites
+
+`pygnme` requires the pybind11 package, which can be installed with 
+
+```
+python -m pip install pybind11
+```
+
 ### Installation
 
 `pygnme` is packaged with a `setup.py`:
 
 ```
-git clone https://github.com/BoothGroup/pygnme
+git clone --recurse-submodules git@github.com:hgaburton/pygnme.git
 python -m pip install . -v --user
 ```
 

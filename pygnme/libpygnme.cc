@@ -14,7 +14,7 @@
 
 namespace py = pybind11;
 
-namespace pybind11::literals {
+//namespace pybind11::literals {
 
 using Complex = std::complex<double>;
 
@@ -31,6 +31,9 @@ PYBIND11_MODULE(libpygnme, m) {
     // pygnme.wick
 
     py::module wick = m.def_submodule("wick");
+
+    export_reference_state<double>(wick, "double");
+    export_reference_state<Complex>(wick, "complex");
 
     export_wick_orbitals<double, double>(wick, "double_double");
     export_wick_orbitals<Complex, double>(wick, "complex_double");
@@ -74,4 +77,4 @@ PYBIND11_MODULE(libpygnme, m) {
     export_eri_ao2mo(utils);
 }
 
-}  // namespace pybind11:literals
+//}  // namespace pybind11:literals

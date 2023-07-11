@@ -22,7 +22,7 @@
 
 namespace py = pybind11;
 
-namespace pybind11::literals {
+//namespace pybind11::literals {
 
 using Complex = std::complex<double>;
 
@@ -37,13 +37,19 @@ void export_bitset(py::module &m) {
         .def(py::init<const Bitset &>())
         .def(py::init<std::vector<bool>>())
         .def(py::init<int, int>())
+        // Functions:
         .def("flip", &Bitset::flip)
         .def("print", &Bitset::print)
         .def("count", &Bitset::count)
         .def("get_int", &Bitset::get_int)
         .def("excitation", &Bitset::excitation)
         .def("occ", &Bitset::occ)
-        .def("next_fci", &Bitset::next_fci);
+        .def("next_fci", &Bitset::next_fci)
+        .def("parity", [](Bitset &self, Bitset &other) {
+                return self.parity(other);
+            },
+            py::arg("other")
+        );
 }
 
 /*
@@ -103,8 +109,36 @@ void export_linalg(py::module &m) {
     using Complex = std::complex<double>;
     m.def("orthogonalisation_matrix", libgnme::orthogonalisation_matrix<double>);
     m.def("orthogonalisation_matrix", libgnme::orthogonalisation_matrix<Complex>);
-    m.def("gen_eig_sym", libgnme::gen_eig_sym<double>);
-    m.def("gen_eig_sym", libgnme::gen_eig_sym<Complex>);
+    m.def("gen_eig_sym",  [](
+                          const size_t dim, 
+                          arma::Mat<double> &M, arma::Mat<double> &S,  
+                          double thresh) {
+                arma::Mat<double> X, eigvec;
+                arma::Col<double> eigval;
+                libgnme::gen_eig_sym<double>(dim, M, S, X, eigval, eigvec, thresh);
+                arma::Row<double> roweig = eigval.st();
+                return std::make_tuple(roweig, eigvec);
+          },
+          py::arg("dim"),
+          py::arg("M"),
+          py::arg("S"),
+          py::arg("thresh") = 1e-8
+    );
+    m.def("gen_eig_sym",  [](
+                          const size_t dim, 
+                          arma::Mat<Complex> &M, arma::Mat<Complex> &S,  
+                          double thresh) {
+                arma::Mat<Complex> X, eigvec;
+                arma::Col<double> eigval;
+                libgnme::gen_eig_sym<Complex>(dim, M, S, X, eigval, eigvec, thresh);
+                arma::Row<double> roweig = eigval.st();
+                return std::make_tuple(roweig, eigvec);
+          },
+          py::arg("dim"),
+          py::arg("M"),
+          py::arg("S"),
+          py::arg("thresh") = 1e-8
+    );
     m.def("adjoint_matrix", libgnme::adjoint_matrix<double>);
     m.def("adjoint_matrix", libgnme::adjoint_matrix<Complex>);
 }
@@ -122,6 +156,6 @@ void export_eri_ao2mo(py::module &m) {
     m.def("eri_ao2mo_split", libgnme::eri_ao2mo<Complex, Complex>);
 }
 
-}  // namespace pybind11:literals
+//}  // namespace pybind11:literals
 
 #endif

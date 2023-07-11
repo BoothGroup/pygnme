@@ -26,8 +26,8 @@ else()
 endif()
 
 # BLAS
-find_package(BLAS REQUIRED)
-find_package(LAPACK REQUIRED)
+find_package(BLAS)
+find_package(LAPACK)
 
 # Armadillo
 set(ARMADILLO_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/external/armadillo)
@@ -49,6 +49,6 @@ pybind11_add_module(libpygnme
 target_link_libraries(libpygnme PUBLIC gnme_wick)
 target_link_libraries(libpygnme PUBLIC gnme_slater)
 target_link_libraries(libpygnme PUBLIC gnme_utils)
-target_link_libraries(libpygnme PUBLIC blas)
-target_link_libraries(libpygnme PUBLIC lapack)
+#target_link_libraries(libpygnme PUBLIC blas)
+#target_link_libraries(libpygnme PUBLIC lapack)
 target_link_libraries(libpygnme PUBLIC carma::carma)

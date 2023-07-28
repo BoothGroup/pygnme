@@ -27,6 +27,7 @@ endif()
 
 # BLAS
 find_package(BLAS)
+find_package(CBLAS)
 find_package(LAPACK)
 
 # Armadillo

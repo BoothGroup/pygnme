@@ -1,3 +1,3 @@
 [submodule "external/libgnme"]
 	path = external/libgnme
-	url = https://github.com/hgaburton/libgnme.git
+	url = https://github.com/abhishekkhedkar09/libgnme.git

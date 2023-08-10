@@ -1,3 +1,4 @@
 [submodule "external/libgnme"]
 	path = external/libgnme
 	url = https://github.com/abhishekkhedkar09/libgnme.git
+	branch = main
